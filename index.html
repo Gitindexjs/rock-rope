@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<script src="https://cdn.jsdelivr.net/npm/p5@1.11.5/lib/p5.min.js"></script>
+</head>
+<body>
+	<script>
+		let velocities = []
+		let g = 1;
+		let m = 1;
+		let rocks = [[300, 100], [300, 500]]
+		let ropes = [[0, 1]]
+		function setup(){
+			createCanvas(600, 600)
+			// for(let i =0 ; i < 3; i++) {
+			// 	rocks.push([Math.random()*600, Math.random() *600])
+			// }
+			for(let i = 0; i < 3; i++) {
+				velocities.push([0, 0])
+			}
+		}
+		function draw() {
+			background(0);
+			fill(255)
+			stroke(255)
+			for(let i =0; i < ropes.length; i++){
+				line(...rocks[ropes[i][0]], ...rocks[ropes[i][1]])
+			}
+			for(let i = 0; i < rocks.length; i++) {
+				ellipse(...rocks[i], 10)
+			}
+			velocities[0][1] -= m * g;
+			let dx = rocks[1][0] - rocks[0][0];
+			let dy = rocks[1][1] - rocks[0][1];
+			let t = [dx, dy]
+			let tMag = Math.sqrt(t[0]**2+t[1]**2)
+			t = t.map(x => x/tMag*m*g)
+			velocities[0][0] += t[0];
+			velocities[0][1] += t[1];
+			rocks[0][0] += velocities[0][0]
+			rocks[0][1] += velocities[0][1]
+		}
+	</script>
+</body>
+</html>
