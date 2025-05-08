@@ -11,37 +11,44 @@
 		let velocities = []
 		let g = 1;
 		let m = 1;
-		let rocks = [[300, 100], [300, 500]]
+		let rocks = [[300, 100], [300, 400]]
 		let ropes = [[0, 1]]
+		let cSize = 600;
 		function setup(){
-			createCanvas(600, 600)
+			createCanvas(cSize, cSize)
 			// for(let i =0 ; i < 3; i++) {
-			// 	rocks.push([Math.random()*600, Math.random() *600])
+			// 	rocks.push([Math.random()*cSize, Math.random() *cSize])
 			// }
 			for(let i = 0; i < 3; i++) {
 				velocities.push([0, 0])
 			}
 		}
+		function displayCoord(a) {
+			return a.map((x,i) => i === 1 ? cSize-x: x)
+		}
+		function angleBetween(a, b) {
+			return Math.atan((b[1]-a[1])/(b[0]-a[0]))
+		}
+
 		function draw() {
 			background(0);
 			fill(255)
 			stroke(255)
 			for(let i =0; i < ropes.length; i++){
-				line(...rocks[ropes[i][0]], ...rocks[ropes[i][1]])
+				line(...displayCoord(rocks[ropes[i][0]]), ...displayCoord(rocks[ropes[i][1]]))
 			}
 			for(let i = 0; i < rocks.length; i++) {
-				ellipse(...rocks[i], 10)
+				ellipse(...displayCoord(rocks[i]), 10)
 			}
-			velocities[0][1] -= m * g;
-			let dx = rocks[1][0] - rocks[0][0];
-			let dy = rocks[1][1] - rocks[0][1];
-			let t = [dx, dy]
-			let tMag = Math.sqrt(t[0]**2+t[1]**2)
-			t = t.map(x => x/tMag*m*g)
-			velocities[0][0] += t[0];
-			velocities[0][1] += t[1];
-			rocks[0][0] += velocities[0][0]
-			rocks[0][1] += velocities[0][1]
+			// find the angle
+			// sub pi/2 and apply magnitude
+			let angle = angleBetween(rocks[1], rocks[0]);
+			let mag = m * g * Math.sin(angle)
+			console.log(unitDir)
+			unitDir = unitDir.map(x => x * mag)
+			velocities[0] = velocities[0].map((x,i) => unitDir[i]+x)
+			rocks[0] = rocks[0].map((x,i) => x+velocities[0][i])
+			// noLoop()
 		}
 	</script>
 </body>
